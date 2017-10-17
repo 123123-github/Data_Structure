@@ -1,6 +1,6 @@
-#include "List_Link.h"
+ï»¿#include "List_Link.h"
 
-//ÊµÏÖ½«½áµãs²åÈëÁ´±íÊ×Î»
+//å®ç°å°†ç»“ç‚¹sæ’å…¥é“¾è¡¨é¦–ä½
 Status Insert_First(LinkList &L, Link &s)
 {
 	if (L.head == L.tail) 
@@ -18,19 +18,19 @@ Status Insert_First(LinkList &L, Link &s)
 	return OK;
 }
 
-//ÏßĞÔÁ´±íÔªËØÄæÖÃ
-void Reverse_Link(LinkList &L)
+//çº¿æ€§é“¾è¡¨å…ƒç´ é€†ç½®
+Status Reverse_Link(LinkList &L)
 {
-	//Á´±íÎª¿ÕÊ±£¬±íÊ¾ÄæÖÃÒÑÍê³É
+	//é“¾è¡¨ä¸ºç©ºæ—¶ï¼Œè¡¨ç¤ºé€†ç½®å·²å®Œæˆ
 	if (L.head == L.tail)
 		return OK;
 	
-	//Á´±í²»Îª¿ÕÊ±
+	//é“¾è¡¨ä¸ä¸ºç©ºæ—¶
 	Link p, q;
 	L.tail = L.head;
 	p = L.head->next;
 	q = p->next;
-	//Á´±íÔªËØ¶àÓÚ1¸öÊ±
+	//é“¾è¡¨å…ƒç´ å¤šäº1ä¸ªæ—¶
 	while (q != NULL)
 	{
 		Insert_First(L, p);
@@ -41,4 +41,11 @@ void Reverse_Link(LinkList &L)
 	Insert_First(L, p);
 
 	return OK;
+}
+
+int main()
+{
+
+
+	return 0;
 }

@@ -1,28 +1,28 @@
-ï»¿// ADT List åŸºæœ¬æ“ä½œ
-// é“¾å¼å®ç° (C++ç»“æ„ä½“)
-
+// ADT List »ù±¾²Ù×÷
+// Á´Ê½ÊµÏÖ (C++½á¹¹Ìå)
 #include <iostream>
 using namespace std;
-//å‡½æ•°ç»“æœçŠ¶æ€ä»£ç 
+//º¯Êı½á¹û×´Ì¬´úÂë
 #define TRUE 1
 #define FALSE 0
 #define OK 1
 #define ERROR 0
 #define INFEASIBLE -1
-//Status ä¸ºå‡½æ•°ç±»å‹ï¼Œå€¼ä¸ºå‡½æ•°ç»“æœçŠ¶æ€ä»£ç 
+#define OVERFLOW -2
+//Status Îªº¯ÊıÀàĞÍ£¬ÖµÎªº¯Êı½á¹û×´Ì¬´úÂë
 typedef int Status;
 
-//çº¿æ€§è¡¨_é“¾è¡¨å®šä¹‰
+//ÏßĞÔ±í_Á´±í¶¨Òå
 
-//ç»“ç‚¹å®šä¹‰
+//½áµã¶¨Òå
 struct LNode
 {
 	int data;
-	LNode* next;
+	int* next;
 };
 typedef LNode *Link;
-//é“¾è¡¨å®šä¹‰
-struct LinkList 
+//Á´±í¶¨Òå
+struct LinkList
 {
 	Link head;
 	Link tail;
@@ -30,10 +30,10 @@ struct LinkList
 	int len;
 };
 
-//é“¾è¡¨åŸºæœ¬ç›¸å…³å‡½æ•°:
+//Á´±í»ù±¾Ïà¹Øº¯Êı:
 
-//åˆ†é… pæŒ‡å‘çš„ç»“ç‚¹ï¼Œèµ‹å€¼ä¸ºeï¼›æˆåŠŸè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
-Status MakeNode(Link &p,int e)
+//·ÖÅä pÖ¸ÏòµÄ½áµã£¬¸³ÖµÎªe£»³É¹¦·µ»ØOK£¬·ñÔò·µ»ØERROR
+Status MakeNode(Link &p, int e)
 {
 	p = new LNode;
 	if (p == NULL)
@@ -44,7 +44,7 @@ Status MakeNode(Link &p,int e)
 
 	return OK;
 }
-//é‡Šæ”¾ ç»“ç‚¹
+//ÊÍ·Å ½áµã
 Status DeleteNode(Link &p)
 {
 	if (p == NULL)
@@ -55,22 +55,22 @@ Status DeleteNode(Link &p)
 }
 
 
-//åäºŒä¸ª åŸºæœ¬å‡½æ•°å®ç°ï¼š
+//Ê®¶ş¸ö »ù±¾º¯ÊıÊµÏÖ£º
 
-//æ„é€ ç©ºè¡¨L,æˆåŠŸæ—¶è¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
+//¹¹Ôì¿Õ±íL,³É¹¦Ê±·µ»ØOK£¬·ñÔò·µ»ØERROR
 Status InitList_Link(LinkList &L)
 {
 	L.head = new LNode;
 	if (L.head == NULL)
 		return ERROR;
-	
+
 	L.head->next = NULL;
-	L.tail = L.head;
-	L.len = 0;
+	tail = head;
+	len = 0;
 
 	return OK;
-}	
-//é”€æ¯çº¿æ€§è¡¨L
+}
+//Ïú»ÙÏßĞÔ±íL
 Status DestroyList_Link(LinkList &L)
 {
 	if (L.head == NULL)
@@ -87,21 +87,21 @@ Status DestroyList_Link(LinkList &L)
 		q = q->next;
 	}
 	delete p;
-	
+
 	L.head = NULL;
 	L.tail = L.head;
-	L.len = -1;
+	len = -1;
 
 	return OK;
 }
-//å°†è¡¨ç½®ä¸ºç©ºè¡¨,æˆåŠŸè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
+//½«±íÖÃÎª¿Õ±í,³É¹¦·µ»ØOK£¬·ñÔò·µ»ØERROR
 Status ClearList_Link(LinkList &L)
 {
 	if (L.head == NULL)
 		return ERROR;
-	if (L.tail == L.head)
+	if (L.head == NULL)
 		return OK;
-	
+
 	Link p, q;
 	p = L.head->next;
 	q = p->next;
@@ -114,11 +114,9 @@ Status ClearList_Link(LinkList &L)
 	delete p;
 
 	L.tail = L.head;
-	L.len = 0;
-
-	return OK;
+	len = 0;
 }
-//è¡¨ä¸ºç©ºè¿”å›TRUEï¼Œå¦åˆ™è¿”å›FALSE
+//±íÎª¿Õ·µ»ØTRUE£¬·ñÔò·µ»ØFALSE
 Status ListEmpty_Link(LinkList L)
 {
 	if (L.len == 0)
@@ -126,13 +124,13 @@ Status ListEmpty_Link(LinkList L)
 	else
 		return FALSE;
 }
-//è¿”å›è¡¨çš„é•¿åº¦
+//·µ»Ø±íµÄ³¤¶È
 int ListLength_Link(LinkList L)
 {
 	return L.len;
 }
-//ç”¨eè¿”å›Lä¸­çš„ç¬¬iä¸ªå€¼ï¼ŒæˆåŠŸæ—¶å‡½æ•°è¿”å›OKï¼Œå¦åˆ™è¿”å›FALSE
-Status GetElem_Link(LinkList L, int i,int &e)
+//ÓÃe·µ»ØLÖĞµÄµÚi¸öÖµ£¬³É¹¦Ê±º¯Êı·µ»ØOK£¬·ñÔò·µ»ØFALSE
+Status GetElem_Link(LinkList L, int i, int &e)
 {
 	if (i<1 || i>L.len)
 		return ERROR;
@@ -149,8 +147,8 @@ Status GetElem_Link(LinkList L, int i,int &e)
 
 	return	OK;
 }
-//è¿”å›Lä¸­ç¬¬ä¸€ä¸ªä¸eç›¸ç­‰çš„å…ƒç´ çš„ä½åºï¼Œä¸å­˜åœ¨æ—¶è¿”å›0
-int LocateElem_Link(LinkList L,int e)
+//·µ»ØLÖĞµÚÒ»¸öÓëeÏàµÈµÄÔªËØµÄÎ»Ğò£¬²»´æÔÚÊ±·µ»Ø0
+int LocateElem_Link(LinkList L, int e)
 {
 	Link p = L.head;
 	int i = 1;
@@ -163,20 +161,20 @@ int LocateElem_Link(LinkList L,int e)
 	if (p == NULL)
 		return	0;
 
-	return i;	
+	return i;
 }
-//ç”¨ pre_e è¿”å›å…ƒç´  cur_e çš„å‰é©±ï¼›æ“ä½œæˆåŠŸè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
-Status PriorElem_Link(LinkList L,int cur_e,int &pre_e)
+//ÓÃ pre_e ·µ»ØÔªËØ cur_e µÄÇ°Çı£»²Ù×÷³É¹¦·µ»ØOK£¬·ñÔò·µ»ØERROR
+Status PriorElem_Link(LinkList L, int cur_e, int &pre_e)
 {
 	int i = LocateElem_Link(L, cur_e);
 
 	if (i<2 || i>L.len)
 		return ERROR;
-	
+
 	GetElem_Link(L, i - 1, pre_e);
 	return OK;
 }
-//ç”¨ next_e è¿”å›å…ƒç´  cur_e çš„åç»§ï¼›æ“ä½œæˆåŠŸè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
+//ÓÃ next_e ·µ»ØÔªËØ cur_e µÄºó¼Ì£»²Ù×÷³É¹¦·µ»ØOK£¬·ñÔò·µ»ØERROR
 Status NextElem_Link(LinkList L, int cur_e, int &next_e)
 {
 	int i = LocateElem_Link(L, cur_e);
@@ -184,15 +182,15 @@ Status NextElem_Link(LinkList L, int cur_e, int &next_e)
 	if (i<1 || i>L.len - 1)
 		return ERROR;
 
-	GetElem_Link(L, i + 1, next_e);
-	return OK;
+	GetElem_Link(L, i + 1, next_e)
+		return OK;
 }
-//åœ¨çº¿æ€§è¡¨çš„ç¬¬iä¸ªä½ç½®æ’å…¥e;è‹¥æˆåŠŸè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
-Status ListInsert_Link(LinkList &L,int i,int e)
+//ÔÚÏßĞÔ±íµÄµÚi¸öÎ»ÖÃ²åÈëe;Èô³É¹¦·µ»ØOK£¬·ñÔò·µ»ØERROR
+Status ListInsert_Link(LinkList &L, int i, int e)
 {
 	if (i<1 || i>L.len + 1)
 		return ERROR;
-	
+
 	Link s;
 	MakeNode(s, e);
 	Link p, q;
@@ -213,8 +211,8 @@ Status ListInsert_Link(LinkList &L,int i,int e)
 	return OK;
 
 }
-//åœ¨çº¿æ€§è¡¨çš„ç¬¬iä¸ªä½ç½®åˆ é™¤,ç”¨eè¿”å›å…¶å€¼;è‹¥æˆåŠŸè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR
-Status ListDelete_Link(LinkList &L,int i,int &e)
+//ÔÚÏßĞÔ±íµÄµÚi¸öÎ»ÖÃÉ¾³ı,ÓÃe·µ»ØÆäÖµ;Èô³É¹¦·µ»ØOK£¬·ñÔò·µ»ØERROR
+Status ListDelete_Link(LinkList &L, int i, int &e)
 {
 	if (i<1 || i>L.len)
 		return ERROR;
@@ -237,16 +235,10 @@ Status ListDelete_Link(LinkList &L,int i,int &e)
 
 	return OK;
 }
-//éå†çº¿æ€§è¡¨
+//±éÀúÏßĞÔ±í
 Status ListTraverse_Sq()
 {
-	return 0;
+
 }
 
-
-
-int main()
-{
-    return 0;
-}
 

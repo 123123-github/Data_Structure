@@ -1,6 +1,6 @@
-#include "List_Sq.h"
+﻿#include "List_Sq.h"
 
-void Reverse_Sq(SqList &L)
+Status Reverse_Sq(SqList &L)
 {
 	if (L.length <= 0)
 		return OK;
@@ -19,4 +19,11 @@ void Reverse_Sq(SqList &L)
 		j--;
 	}
 	return OK;
+}
+
+int main()
+{
+
+
+	return 0;
 }
