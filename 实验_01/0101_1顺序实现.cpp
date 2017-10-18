@@ -25,7 +25,7 @@ struct SqList
 
 //十二个 基本函数实现：
 
-//构造空表L
+//构造(初始化)空表
 Status InitList_Sq(SqList &L)
 {
 	L.elem = new int[LIST_INIT_SIZE];
@@ -179,18 +179,97 @@ Status ListDelete_Sq(SqList &L, int i, int &e)
 
 	return OK;
 }
-//遍历线性表
-Status ListTraverse_Sq(SqList L)
+//遍历(输出)线性表
+void ListTraverse_Sq(SqList L)
 {
+	cout << "元素为：" << endl;
+	for (int i = 0; i < L.length; i++)
+		cout << L.elem[i] << '\t';
+	cout << endl;
 
+	return;
+}
+//创建线性表
+void CreatList_Sq(SqList &L, int n)
+{
+	//初始化线性表
+	InitList_Sq(L);
+	//创建时插入的元素定义为e
+	int e;
 
-	return 0;
+	for (int i = 0;i < n;i++)
+	{
+		cin >> e;
+		ListInsert_Sq(L, L.length + 1, e);
+	}
+
+	return;
 }
 
 
 
 int main()
 {
+	SqList L;
+
+	int n;
+	//1.创建 2.遍历 3.初始化函数 检验
+	cout << "请输入元素个数n，及元素\n";
+	cin >> n;
+	CreatList_Sq(L,n);
+	ListTraverse_Sq(L);
+
+	int i, e, pre_e, next_e;
+
+	//4.获取元素函数 检验
+	cout << "请输入所要选取元素的位数：\n";
+	cin >> i;
+	GetElem_Sq(L, i, e);
+	cout << "该元素为：" << e << endl;
+
+	//5.前一个 6.后一个 函数检测
+	cout << "请输入一个表中的元素\n";
+	cin >> e;
+	NextElem_Sq(L, e, next_e);
+	PriorElem_Sq(L, e, pre_e);
+	cout << "该元素前一个为: " << pre_e << endl;
+	cout << "该元素后一个为: " << next_e << endl;
+	
+	//7.长度
+	cout << "此时线性表长度为：" << ListLength_Sq(L) << endl;
+
+	//8.插入 9.删除
+	cout << "请输入插入元素e，插入位置i\n";
+	cin >> e >> i;
+	ListInsert_Sq(L,i,e);
+	cout << "插入后为：" << endl;
+	ListTraverse_Sq(L);
+
+	cout << "请输入删除的元素位置i\n";
+	cin >> i;
+	ListDelete_Sq(L,i,e);
+	cout << "删除的元素为 " << e << endl;
+	cout << "删除后为：" << endl;
+	ListTraverse_Sq(L);
+
+	//10.定位 11.清空  12.是否为空 13.销毁
+	cout << "输入一个元素\n";
+	cin >> e;
+	cout << "该元素位置为：";
+	cout << LocateElem_Sq(L, e);
+
+	//清空线性表
+	cout << "清空函数调用\n";
+	ClearList_Sq(L);
+	ListTraverse_Sq(L);
+	
+	if (ListEmpty_Sq(L))
+		cout << "线性表为空" << endl;
+
+	DestroyList_Sq(L);
+
+	system("pause");
+
     return 0;
 }
 
