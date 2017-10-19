@@ -57,7 +57,7 @@ Status DeleteNode(Link &p)
 
 //十二个 基本函数实现：
 
-//构造空表L,成功时返回OK，否则返回ERROR
+//构造空链表L,成功时返回OK，否则返回ERROR
 Status InitList_Link(LinkList &L)
 {
 	L.head = new LNode;
@@ -70,7 +70,7 @@ Status InitList_Link(LinkList &L)
 
 	return OK;
 }	
-//销毁线性表L
+//销毁链表L
 Status DestroyList_Link(LinkList &L)
 {
 	if (L.head == NULL)
@@ -94,7 +94,7 @@ Status DestroyList_Link(LinkList &L)
 
 	return OK;
 }
-//将表置为空表,成功返回OK，否则返回ERROR
+//将链表置为空表,成功返回OK，否则返回ERROR
 Status ClearList_Link(LinkList &L)
 {
 	if (L.head == NULL)
@@ -118,7 +118,7 @@ Status ClearList_Link(LinkList &L)
 
 	return OK;
 }
-//表为空返回TRUE，否则返回FALSE
+//链表为空返回TRUE，否则返回FALSE
 Status ListEmpty_Link(LinkList L)
 {
 	if (L.len == 0)
@@ -126,7 +126,7 @@ Status ListEmpty_Link(LinkList L)
 	else
 		return FALSE;
 }
-//返回表的长度
+//返回链表的长度
 int ListLength_Link(LinkList L)
 {
 	return L.len;
@@ -187,7 +187,7 @@ Status NextElem_Link(LinkList L, int cur_e, int &next_e)
 	GetElem_Link(L, i + 1, next_e);
 	return OK;
 }
-//在线性表的第i个位置插入e;若成功返回OK，否则返回ERROR
+//在链表的第i个位置插入e;若成功返回OK，否则返回ERROR
 Status ListInsert_Link(LinkList &L,int i,int e)
 {
 	if (i<1 || i>L.len + 1)
@@ -213,7 +213,7 @@ Status ListInsert_Link(LinkList &L,int i,int e)
 	return OK;
 
 }
-//在线性表的第i个位置删除,用e返回其值;若成功返回OK，否则返回ERROR
+//在链表的第i个位置删除,用e返回其值;若成功返回OK，否则返回ERROR
 Status ListDelete_Link(LinkList &L,int i,int &e)
 {
 	if (i<1 || i>L.len)
@@ -237,16 +237,106 @@ Status ListDelete_Link(LinkList &L,int i,int &e)
 
 	return OK;
 }
-//遍历线性表
-Status ListTraverse_Sq()
+//遍历链表
+Status ListTraverse_Link(LinkList L)
 {
+	Link p;
+	p = L.head;
+
+	while (p!=L.tail)
+	{
+		p = p->next;
+		cout << p->data << '\t';
+	}
+	cout << endl;
+
 	return 0;
 }
+//创建链表
+void CreatList_Link(LinkList &L, int n)
+{
+	//s为创建链表时，加入元素结点的指针;data为链表中存入的数据
+	Link s;
+	int data;
+	
+	//初始化链表
+	InitList_Link(L);
+	for (int i = 0;i < n;i++)
+	{
+		cin >> data;
+		MakeNode(s, data);
+		L.tail->next = s;
+		L.tail = s;
+	}
+	L.tail->next = NULL;
+	L.len = n;
 
+	return;
+}
 
 
 int main()
 {
-    return 0;
+	LinkList L;
+
+	int n;
+	//1.创建 2.遍历 3.初始化函数 检验
+	cout << "请输入元素个数n，及元素\n";
+	cin >> n;
+	CreatList_Link(L, n);
+	ListTraverse_Link(L);
+
+	int i, e, pre_e, next_e;
+
+	//4.获取元素函数 检验
+	cout << "请输入所要选取元素的位数：\n";
+	cin >> i;
+	GetElem_Link(L, i, e);
+	cout << "该元素为：" << e << endl;
+
+	//5.前一个 6.后一个 函数检测
+	cout << "请输入一个表中的元素\n";
+	cin >> e;
+	NextElem_Link(L, e, next_e);
+	PriorElem_Link(L, e, pre_e);
+	cout << "该元素前一个为: " << pre_e << endl;
+	cout << "该元素后一个为: " << next_e << endl;
+
+	//7.长度
+	cout << "此时线性表长度为：" << ListLength_Link(L) << endl;
+
+	//8.插入 9.删除
+	cout << "请输入插入元素e，插入位置i\n";
+	cin >> e >> i;
+	ListInsert_Link(L, i, e);
+	cout << "插入后为：" << endl;
+	ListTraverse_Link(L);
+
+	cout << "请输入删除的元素位置i\n";
+	cin >> i;
+	ListDelete_Link(L, i, e);
+	cout << "删除的元素为 " << e << endl;
+	cout << "删除后为：" << endl;
+	ListTraverse_Link(L);
+
+	//10.定位 11.清空  12.是否为空 13.销毁
+	cout << "输入一个元素\n";
+	cin >> e;
+	cout << "该元素位置为：";
+	cout << LocateElem_Link(L, e);
+
+	//清空线性表
+	cout << "清空函数调用\n";
+	ClearList_Link(L);
+	ListTraverse_Link(L);
+
+	if (ListEmpty_Link(L))
+		cout << "线性表为空" << endl;
+
+	DestroyList_Link(L);
+
+	system("pause");
+
+	return 0;
 }
 

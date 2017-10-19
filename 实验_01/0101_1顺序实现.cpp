@@ -182,7 +182,7 @@ Status ListDelete_Sq(SqList &L, int i, int &e)
 //遍历(输出)线性表
 void ListTraverse_Sq(SqList L)
 {
-	cout << "元素为：" << endl;
+
 	for (int i = 0; i < L.length; i++)
 		cout << L.elem[i] << '\t';
 	cout << endl;
@@ -205,8 +205,6 @@ void CreatList_Sq(SqList &L, int n)
 
 	return;
 }
-
-
 
 int main()
 {
