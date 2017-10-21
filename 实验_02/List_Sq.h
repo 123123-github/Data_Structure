@@ -1,14 +1,15 @@
 // ADT List 基本操作
 // 顺序实现 (C++结构体)
+
 #include <iostream>
 using namespace std;
+
 //函数结果状态代码
 #define TRUE 1
 #define FALSE 0
 #define OK 1
 #define ERROR 0
 #define INFEASIBLE -1
-#define OVERFLOW -2
 //Status 为函数类型，值为函数结果状态代码
 typedef int Status;
 
@@ -24,7 +25,7 @@ struct SqList
 
 //十二个 基本函数实现：
 
-//构造空表L
+//构造(初始化)空表
 Status InitList_Sq(SqList &L)
 {
 	L.elem = new int[LIST_INIT_SIZE];
@@ -91,9 +92,9 @@ int LocateElem_Sq(SqList L, int e)
 	if (L.elem == NULL)
 		return ERROR;
 
-	for (int i = 0;i <= L.length - 1;i++)
-		if (L.elem[i] == e)
-			return i + 1;
+	for (int i = 1;i <= L.length;i++)
+		if (L.elem[i - 1] == e)
+			return i;
 
 	return 0;
 }
@@ -178,9 +179,29 @@ Status ListDelete_Sq(SqList &L, int i, int &e)
 
 	return OK;
 }
-//遍历线性表
-Status ListTraverse_Sq(SqList L)
+//遍历(输出)线性表
+void ListTraverse_Sq(SqList L)
 {
 
-}
+	for (int i = 0; i < L.length; i++)
+		cout << L.elem[i] << '\t';
+	cout << endl;
 
+	return;
+}
+//创建线性表
+void CreatList_Sq(SqList &L, int n)
+{
+	//初始化线性表
+	InitList_Sq(L);
+	//创建时插入的元素定义为e
+	int e;
+
+	for (int i = 0;i < n;i++)
+	{
+		cin >> e;
+		ListInsert_Sq(L, L.length + 1, e);
+	}
+
+	return;
+}
