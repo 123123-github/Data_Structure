@@ -92,9 +92,9 @@ int LocateElem_Sq(SqList L, int e)
 	if (L.elem == NULL)
 		return ERROR;
 
-	for (int i = 0;i <= L.length - 1;i++)
-		if (L.elem[i] == e)
-			return i + 1;
+	for (int i = 1;i <= L.length;i++)
+		if (L.elem[i - 1] == e)
+			return i;
 
 	return 0;
 }

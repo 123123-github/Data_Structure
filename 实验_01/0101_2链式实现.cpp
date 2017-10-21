@@ -80,7 +80,7 @@ Status DestroyList_Link(LinkList &L)
 	p = L.head;
 	q = p->next;
 
-	while (q != NULL)
+	while (q)
 	{
 		delete p;
 		p = q;
@@ -89,7 +89,7 @@ Status DestroyList_Link(LinkList &L)
 	delete p;
 	
 	L.head = NULL;
-	L.tail = L.head;
+	L.tail = NULL;
 	L.len = -1;
 
 	return OK;
@@ -99,23 +99,23 @@ Status ClearList_Link(LinkList &L)
 {
 	if (L.head == NULL)
 		return ERROR;
-	if (L.tail == L.head)
-		return OK;
 	
 	Link p, q;
 	p = L.head->next;
-	q = p->next;
-	while (q != NULL)
-	{
-		delete p;
-		p = q;
-		q = q->next;
-	}
-	delete p;
-
+	q = p;
+	//将表头及元素断开,将链表置空
+	L.head->next = NULL;
 	L.tail = L.head;
 	L.len = 0;
 
+	//释放多余结点空间
+	while (p)
+	{
+		q = q->next;
+		delete p;
+		p = q;
+	}
+	
 	return OK;
 }
 //链表为空返回TRUE，否则返回FALSE
@@ -137,7 +137,8 @@ Status GetElem_Link(LinkList L, int i,int &e)
 	if (i<1 || i>L.len)
 		return ERROR;
 
-	Link p = L.head;
+	//j为p所指的结点位序(不包含头结点)
+	Link p = L.head->next;
 	int j = 1;
 
 	while (j<i)
@@ -152,10 +153,11 @@ Status GetElem_Link(LinkList L, int i,int &e)
 //返回L中第一个与e相等的元素的位序，不存在时返回0
 int LocateElem_Link(LinkList L,int e)
 {
-	Link p = L.head;
+	Link p = L.head->next;
 	int i = 1;
 
-	while (p->data != e && p != NULL)
+	//p存在时再访问p所指向的元素，与的两条语句顺序不能互换
+	while (p && p->data != e)
 	{
 		p = p->next;
 		i++;
@@ -169,22 +171,24 @@ int LocateElem_Link(LinkList L,int e)
 Status PriorElem_Link(LinkList L,int cur_e,int &pre_e)
 {
 	int i = LocateElem_Link(L, cur_e);
-
+	//有前驱的元素位序应满足的关系：2->L.len
 	if (i<2 || i>L.len)
 		return ERROR;
 	
 	GetElem_Link(L, i - 1, pre_e);
+	
 	return OK;
 }
 //用 next_e 返回元素 cur_e 的后继；操作成功返回OK，否则返回ERROR
 Status NextElem_Link(LinkList L, int cur_e, int &next_e)
 {
 	int i = LocateElem_Link(L, cur_e);
-
+	//有后继的元素位序应满足的关系：1->L.len-1
 	if (i<1 || i>L.len - 1)
 		return ERROR;
 
 	GetElem_Link(L, i + 1, next_e);
+	
 	return OK;
 }
 //在链表的第i个位置插入e;若成功返回OK，否则返回ERROR
@@ -201,13 +205,16 @@ Status ListInsert_Link(LinkList &L,int i,int e)
 	q = p->next;
 	while (j < i)
 	{
-		p = p->next;
+		p = q;
 		q = q->next;
 		j++;
 	}
 	s->next = q;
-	p->next = p;
+	p->next = s;
 
+	//假如插入前是 空表 或 插入位置为链表尾部，则需要改变尾指针指向。这两种情况下q为NULL
+	if (q == NULL)
+		L.tail = s;
 	L.len++;
 
 	return OK;
@@ -233,6 +240,9 @@ Status ListDelete_Link(LinkList &L,int i,int &e)
 	e = q->data;
 	DeleteNode(q);
 
+	//若删除位置为链表尾部，则需修改尾指针指向
+	if (p->next == NULL)
+		L.tail = p;
 	L.len--;
 
 	return OK;
@@ -241,12 +251,13 @@ Status ListDelete_Link(LinkList &L,int i,int &e)
 Status ListTraverse_Link(LinkList L)
 {
 	Link p;
-	p = L.head;
+	p = L.head->next;
 
-	while (p!=L.tail)
+	//p结点存在则输出该节点的数据，p指针遍历链表头结点之后的结点
+	while (p)
 	{
-		p = p->next;
 		cout << p->data << '\t';
+		p = p->next;
 	}
 	cout << endl;
 
@@ -255,7 +266,7 @@ Status ListTraverse_Link(LinkList L)
 //创建链表
 void CreatList_Link(LinkList &L, int n)
 {
-	//s为创建链表时，加入元素结点的指针;data为链表中存入的数据
+	// s 指向为数据分配的结点 ; data 为结点中存入的数据
 	Link s;
 	int data;
 	
@@ -323,7 +334,7 @@ int main()
 	cout << "输入一个元素\n";
 	cin >> e;
 	cout << "该元素位置为：";
-	cout << LocateElem_Link(L, e);
+	cout << LocateElem_Link(L, e) << endl;
 
 	//清空线性表
 	cout << "清空函数调用\n";
