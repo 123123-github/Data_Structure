@@ -75,7 +75,7 @@ int main()
 
 		position = (n + 1) / 2;
 		if (MiddleExit(a, n, position))
-			cout << a[position];
+			cout << a[position-1];
 		else
 			cout << -1;
 	}
