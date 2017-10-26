@@ -43,7 +43,7 @@ Status DestroyStack(SqStack &S)
 	if (!S.base)
 		return ERROR;
 
-	delete S.base[];
+	delete []S.base;
 	S.top = NULL;
 	S.stacksize = -1;
 
@@ -79,7 +79,7 @@ int StackLength(SqStack S)
 	return S.top - S.base;
 }
 //若栈不空，用e返回S的栈顶元素，并返回OK；否则返回FALSE
-Status GetTop(SqStack S,int &e)
+Status GetTop(SqStack S, int &e)
 {
 	if (S.top - S.base == 0)
 		return FALSE;
@@ -144,4 +144,55 @@ Status CreatStack(SqStack &S, int n)
 	}
 
 	return OK;
+}
+
+int main()
+{
+	SqStack S;
+
+	int n;
+	//1.创建 2.遍历 3.初始化函数 检验
+	cout << "请输入元素个数n，及元素\n";
+	cin >> n;
+	CreatStack(S, n);
+	StackTraverse(S);
+
+	int e;
+
+	//4.获取元素函数 检验
+	cout << "栈顶元素为\n";
+	GetTop(S, e);
+	cout << "该元素为：" << e << endl;
+
+	//5.长度
+	cout << "此时栈长度为：" << StackLength(S) << endl;
+
+	//6.插入 7.弹出
+	cout << "请输入插入元素e\n";
+	cin >> e;
+	Push(S, e);
+	cout << "插入后为：" << endl;
+	StackTraverse(S);
+
+	cout << "弹出栈顶元素\n";
+	Pop(S, e);
+	cout << "弹出的元素为 " << e << endl;
+	cout << "弹出后为：" << endl;
+	StackTraverse(S);
+
+	//8.清空  9.是否为空 10.销毁
+	
+	//清空栈
+	cout << "清空函数调用\n";
+	ClearStack(S);
+	StackTraverse(S);
+
+	if (StackEmpty(S))
+		cout << "栈为空" << endl;
+
+	DestroyStack(S);
+
+	system("pause");
+
+	return 0;
 }
