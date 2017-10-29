@@ -44,6 +44,8 @@ Status DestroyList_Sq(SqList &L)
 		return ERROR;
 
 	delete[] L.elem;
+	L.length = -1;
+	L.listsize = -1;
 
 	return OK;
 }
