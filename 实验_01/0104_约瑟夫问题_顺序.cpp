@@ -28,7 +28,7 @@ void Fun_Joseohus_Sq(SqList L, int s, int m)
 	}
 	cout << endl;
 
-	return 0;
+	return;
 }
 
 int main()
@@ -50,6 +50,7 @@ int main()
 	//调用解决问题的函数
 	cout << "出列人的信息依次为：" << endl;
 	Fun_Joseohus_Sq(L, s, m);
+	DestroyList_Sq(L);
 
 	system("pause");
 

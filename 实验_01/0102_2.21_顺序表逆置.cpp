@@ -37,6 +37,7 @@ int main()
 	cout << "调用逆置函数后为:\n";
 	ListReverse_Sq(L);
 	ListTraverse_Sq(L);
+	DestroyList_Sq(L);
 
 	system("pause");
 

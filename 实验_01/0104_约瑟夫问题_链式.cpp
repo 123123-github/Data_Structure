@@ -63,6 +63,7 @@ int main()
 	//调用解决问题的函数
 	cout << "出列人的信息依次为：" << endl;
 	Fun_Joseohus_Link(L,s,m);
+	DestroyList_Link(L);
 
 	system("pause");
 

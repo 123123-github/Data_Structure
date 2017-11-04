@@ -50,6 +50,7 @@ int main()
 	cout << "调用逆置函数后为:\n";
 	ListReverse_Link(L);
 	ListTraverse_Link(L);
+	DestroyList_Link(L);
 
 	system("pause");
 
