@@ -80,6 +80,9 @@ int main()
 			cout << -1;
 	}
 
+	//释放空间
+	delete[]a;
+
 	system("pause");
 
 	return 0;

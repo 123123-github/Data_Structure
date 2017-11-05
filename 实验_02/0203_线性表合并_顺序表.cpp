@@ -66,6 +66,10 @@ int main()
 	cout << "合并后集合C为" << endl;
 	ListTraverse_Sq(Lc);
 
+	//线性表销毁
+	DestroyList_Sq(La);
+	DestroyList_Sq(Lb);
+
 	system("pause");
 
 	return 0;

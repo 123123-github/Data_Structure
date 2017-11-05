@@ -47,7 +47,6 @@ void ListInsertionSort_Link(LinkList &L)
 	return;
 }
 
-
 //测试函数功能
 int main()
 {
@@ -66,6 +65,9 @@ int main()
 	ListInsertionSort_Link(L);
 	cout << "排序后为：" << endl;
 	ListTraverse_Link(L);
+
+	//链表销毁
+	DestroyList_Link(L);
 
 	system("pause");
 

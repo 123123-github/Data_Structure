@@ -80,6 +80,10 @@ int main()
 	cout << "合并后集合C为" << endl;
 	ListTraverse_Link(Lc);
 
+	//链表销毁
+	DestroyList_Link(La);
+	DestroyList_Link(Lb);
+
 	system("pause");
 
 	return 0;

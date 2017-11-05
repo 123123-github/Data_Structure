@@ -39,6 +39,9 @@ int main()
 	cout << "排序后为：" << endl;
 	ListTraverse_Sq(L);
 
+	//顺序表销毁
+	DestroyList_Sq(L);
+
 	system("pause");
 
 	return 0;
