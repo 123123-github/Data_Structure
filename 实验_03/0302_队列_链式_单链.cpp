@@ -171,6 +171,7 @@ Status QueueTraverse(LinkQueue Q)
 
 	return OK;
 }
+//初始化并创建队列
 Status CreatQueue(LinkQueue &Q, int n)
 {
 	InitQueue(Q);

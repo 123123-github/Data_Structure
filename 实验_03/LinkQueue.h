@@ -167,3 +167,18 @@ Status QueueTraverse(LinkQueue Q)
 
 	return OK;
 }
+//初始化并创建队列
+Status CreatQueue(LinkQueue &Q, int n)
+{
+	InitQueue(Q);
+
+	int e;
+
+	for (int i = 0;i < n;i++)
+	{
+		cin >> e;
+		EnQueue(Q, e);
+	}
+
+	return OK;
+}
