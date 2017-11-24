@@ -248,13 +248,13 @@ Status DeleteChild(BiTree &T, BiTreeNode *p, int LR)	//删除树 T 的 p 结点 
 		DestroyBiTree(T->right);
 		p->right = NULL;
 	}
-
+	
 	return OK;
 }
 
 //---------二叉树遍历---------
 
-Status PreOrderTraverse(BiTree &T)			//前序遍历输出
+Status PreOrderTraverse(BiTree T)			//前序遍历输出
 {
 	if (!T)
 		return OK;
@@ -265,14 +265,14 @@ Status PreOrderTraverse(BiTree &T)			//前序遍历输出
 	}
 	else
 	{
-		cout << T->data;
+		cout << T->data << '\t';
 		PreOrderTraverse(T->left);
 		PreOrderTraverse(T->right);
 		return OK;
 	}
 }
 
-Status InOrderTraverse(BiTree &T)			//中序遍历输出
+Status InOrderTraverse(BiTree T)			//中序遍历输出
 {
 	if (!T)
 		return OK;
@@ -284,13 +284,13 @@ Status InOrderTraverse(BiTree &T)			//中序遍历输出
 	else
 	{
 		InOrderTraverse(T->left);
-		cout << T->data;
+		cout << T->data << '\t';
 		InOrderTraverse(T->right);
 		return OK;
 	}
 }
 
-Status PostOrderTraverse(BiTree &T)			//后序遍历输出
+Status PostOrderTraverse(BiTree T)			//后序遍历输出
 {
 	if (!T)
 		return OK;
@@ -303,25 +303,377 @@ Status PostOrderTraverse(BiTree &T)			//后序遍历输出
 	{
 		PostOrderTraverse(T->left);
 		PostOrderTraverse(T->right);
-		cout << T->data;
+		cout << T->data << '\t';
 		return OK;
 	}
 }
 
-Status LevelOrderTraverse(BiTree &T)		//层次遍历二叉树
+//-------------层次遍历---------------
+
+//-------树用队列定义-------
+
+struct QNode_t			//存放树结点的队列
 {
-	/*暂未完成*/
+	BiTreeNode *elem;
+	QNode_t *next;
+};
+typedef QNode_t *Queueptr_t;
+
+Status MakeQueueNode_t(QNode_t* &s,BiTreeNode *t)	//分配结点
+{
+	s = new QNode_t;
+	if (!s)
+		return ERROR;
+
+	s->next = NULL;
+	s->elem = t;
+
 	return OK;
 }
 
+struct Queue_t			//队列定义
+{
+	Queueptr_t front;
+	Queueptr_t rear;
+};
 
+Status InitQueue_t(Queue_t &Q)		//初始化队列
+{
+	Q.front = new QNode_t;
+	if (!Q.front)
+		return ERROR;
 
+	Q.front->next = NULL;
+	Q.rear = Q.front;
+	
+	return OK;
+}
 
+Status DestroyQueue_t(Queue_t &Q)	//销毁队列
+{
+	Queueptr_t p, q;
+	p = q = Q.front;
+
+	while (p)
+	{
+		q = p->next;
+		delete p;
+		p = q;
+	}
+
+	Q.front = NULL;
+	Q.rear = NULL;
+
+	return OK;
+}
+
+bool QueueEmpty_t(Queue_t Q)		//队是否为空
+{
+	if (Q.front == Q.rear)
+		return true;
+	else
+		return false;
+}
+
+Status EnQueue_t(Queue_t &Q,BiTreeNode* t)			//入队
+{
+	QNode_t *s;
+	MakeQueueNode_t(s, t);
+
+	Q.rear->next = s;
+	Q.rear = s;
+
+	return OK;
+}
+
+Status DeQueue_t(Queue_t &Q, BiTreeNode* &t)				//出队
+{
+	if (Q.front == Q.rear)
+		return	ERROR;
+
+	Queueptr_t p;
+	p = Q.front->next;
+	t = p->elem;
+
+	if (p == Q.rear)	//避免队尾指针被删除
+		Q.rear = Q.front;
+
+	Q.front->next = p->next;
+	delete p;
+	p = NULL;
+
+	return OK;
+}
+
+//-----树用队列定义结束-----
+
+Status LevelOrderTraverse(BiTree T)		//层次遍历二叉树
+{
+	Queue_t Q;			//借助队列实现层次遍历
+	InitQueue_t(Q);
+
+	if (T)
+		EnQueue_t(Q, T);
+
+	BiTreeNode *t;
+	while (!QueueEmpty_t(Q))	//每个结点出队后，将其子树入队
+	{
+		DeQueue_t(Q, t);
+		if (t->left)
+			EnQueue_t(Q, t->left);
+		if (t->right)
+			EnQueue_t(Q, t->right);
+
+		cout << t->data << '\t';
+	}
+	cout << endl;
+
+	DestroyQueue_t(Q);	//销毁队列
+
+	return OK;
+}
+
+//------------非递归遍历------------
+
+//-----树用栈定义-----
+#define STACK_INIT_SIZE 100 //栈存储空间 初始分配量
+#define STACKINCREMENT 10   //栈存储空间 分配增量
+
+struct stackelem
+{
+	BiTreeNode* t;
+	bool flag;
+};
+
+struct Stack_t
+{
+	stackelem* base;
+	stackelem* top;
+	int stacksize;
+};
+
+Status InitStack_t(Stack_t &S)
+{
+	S.base = new stackelem[STACK_INIT_SIZE];
+	if (!S.base)
+		return ERROR;
+
+	S.top = S.base;
+	S.stacksize = STACK_INIT_SIZE;
+
+	return OK;
+}
+
+Status DestroyStack_t(Stack_t &S)
+{
+	delete[] S.base;
+	S.top = S.base = NULL;
+	S.stacksize = -1;
+
+	return OK;
+}
+
+bool StackEmpty_t(Stack_t S)
+{	
+	if (S.top == S.base)
+		return true;
+	else
+		return false;
+}
+
+Status GetTop(Stack_t S, BiTreeNode* &t,bool &flag)
+{
+	if (S.top == S.base)
+		return FALSE;
+
+	stackelem s;
+	s = *(S.top - 1);
+	t = s.t;
+	flag = s.flag;
+	
+	return OK;
+}
+
+Status Pop_t(Stack_t &S, BiTreeNode* &t)
+{
+	if (S.base == S.top)
+		return ERROR;
+
+	stackelem s;
+	s = *(S.top - 1);
+	t = s.t;
+
+	S.top--;
+
+	return OK;
+}
+
+Status Push_t(Stack_t &S, BiTreeNode* t)
+{
+	if (S.top-S.base >=S.stacksize)
+	{
+		stackelem *newbase;
+		newbase = new stackelem[S.stacksize + STACKINCREMENT];
+		if (!newbase)
+			exit(OVERFLOW);
+
+		for (int i = 0;i < S.stacksize;i++)
+			newbase[i] = S.base[i];
+
+		S.base = newbase;
+		S.top = S.base + S.stacksize;
+		S.stacksize += STACKINCREMENT;
+	}
+
+	stackelem s;
+	s = { t,true };
+	*S.top = s;
+	S.top++;
+
+	return OK;
+}
+
+Status ChangeTopFlag(Stack_t &S)
+{
+	(*(S.top - 1)).flag = false;
+
+	return OK;
+}
+//-----树用栈定义结束-----
+
+Status PreOrderTraverse_1(BiTree T)		//前序非递归
+{
+	Stack_t S;
+	InitStack_t(S);
+
+	if (T)
+		Push_t(S, T);
+
+	BiTreeNode* t;
+	while (!StackEmpty_t(S))
+	{
+		Pop_t(S, t);
+		if (t->right)
+			Push_t(S, t->right);
+		if (t->left)
+			Push_t(S, t->left);
+
+		cout << t->data << '\t';
+	}
+	cout << endl;
+
+	DestroyStack_t(S);
+
+	return OK;
+}
+
+Status InOrderTraverse_1(BiTree T)
+{
+	Stack_t S;
+	InitStack_t(S);
+
+	if (T)
+		Push_t(S, T);
+
+	bool flag;
+	BiTreeNode* t;
+	while (!StackEmpty_t(S))
+	{
+		GetTop(S, t, flag);
+		
+		while (flag && t->left)
+		{
+			ChangeTopFlag(S);
+			Push_t(S, t->left);
+			t = t->left;
+		}
+		
+		Pop_t(S, t);
+		if (t->right)
+			Push_t(S, t->right);
+
+		cout << t->data << '\t';
+	}
+	cout << endl;
+
+	DestroyStack_t(S);
+
+	return OK;
+}
+
+Status PostOrderTraverse_1(BiTree T)
+{
+	Stack_t S;
+	InitStack_t(S);
+
+	if (T)
+		Push_t(S, T);
+
+	bool flag;
+	BiTreeNode* t;
+	while (!StackEmpty_t(S))
+	{
+		GetTop(S, t, flag);
+
+		while (flag && (t->left || t->right))	//①有左或右子树 且 子树未曾入栈
+		{
+			if (t->right || t->left)	//修改标志位，避免已入栈的再次入栈
+				ChangeTopFlag(S);
+
+			if (t->right)					//②按顺序 右、左 子树入栈（没有的不入栈）
+				Push_t(S, t->right);
+			if (t->left)
+				Push_t(S, t->left);
+
+			if (t->left)					//③有左子树则沿着左子树走，否则沿着右子树走
+				t = t->left;
+			else
+				t = t->right;
+		}
+
+		Pop_t(S, t);
+
+		cout << t->data << '\t';
+	}
+	cout << endl;
+
+	DestroyStack_t(S);
+
+	return OK;
+}
 
 //--------------------主函数测试----------------------
 int main()
 {
+	BiTree T;
+	InitBiTree(T);
 
+	//创建树
+	cout << "请前序输入树结点，为空则使用'#'代替\n";
+	CreatBiTree(T);
+
+	//遍历
+	cout << "\n前序遍历结果：\n";
+	PreOrderTraverse(T);	//前序
+	cout << "\n中序遍历结果：\n";
+	InOrderTraverse(T);		//中序
+	cout << "\n后序遍历结果：\n";
+	PostOrderTraverse(T);	//后序
+	
+	cout << "\n层次遍历结果\n";
+	LevelOrderTraverse(T);	//层次
+
+	cout << "\n前序遍历结果(非递归)：\n";
+	PreOrderTraverse_1(T);
+	cout << "\n中序遍历结果(非递归)：\n";
+	InOrderTraverse_1(T);
+	cout << "\n后序遍历结果(非递归)：\n";
+	PostOrderTraverse_1(T);
+
+	//销毁树
+	DestroyBiTree(T);
+
+	system("pause");
 
 	return 0;
 }
