@@ -43,7 +43,7 @@ Status DestroyStack(SqStack &S)
 	if (!S.base)
 		return ERROR;
 
-	delete S.base[];
+	delete[] S.base;
 	S.top = NULL;
 	S.stacksize = -1;
 
