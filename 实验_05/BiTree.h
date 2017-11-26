@@ -3,6 +3,7 @@
 // C++
 
 //-----------------------函数结果状态代码--------------------
+
 #define TRUE 1
 #define FALSE 0
 #define OK 1
@@ -152,6 +153,10 @@ Status InOrderTraverse_1(BiTree T);		//中序非递归
 Status PostOrderTraverse_1(BiTree T);	//后序非递归
 
 
-//---------判断是否为完全二叉树---------
+//----------------------------其它函数-----------------------------
 
 bool IsComoleteBiTree(BiTree T);		//判断是否是完全二叉树
+
+Status FindAndDelete(BiTree &T,ElemType x);		//递归	在树 T 中删除每个以值 x 为根的子树
+
+Status FindAndDelete_1(BiTree &T, ElemType x);	//非递归	在树 T 中删除每个以值 x 为根的子树

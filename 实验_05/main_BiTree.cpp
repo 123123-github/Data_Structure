@@ -23,6 +23,29 @@ int main()
 	cout << "\n后序遍历结果：\n";
 	PostOrderTraverse(T);	//后序
 
+
+	cout << "\n层次遍历结果\n";
+	LevelOrderTraverse(T);	//层次
+
+	cout << "\n前序遍历结果(非递归)：\n";
+	PreOrderTraverse_1(T);
+	cout << "\n中序遍历结果(非递归)：\n";
+	InOrderTraverse_1(T);
+	cout << "\n后序遍历结果(非递归)：\n";
+	PostOrderTraverse_1(T);
+
+	if (IsComoleteBiTree(T))
+		cout << "是完全二叉树\n";
+
+
+	//删除某一结点
+	ElemType x;
+	cout << "请输入要删除的结点";
+	cin >> x;
+	FindAndDelete_1(T, x);
+
+
+
 	cout << "\n层次遍历结果\n";
 	LevelOrderTraverse(T);	//层次
 

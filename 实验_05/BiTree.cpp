@@ -375,11 +375,13 @@ Status DeQueue_t(Queue_t &Q, BiTreeNode* &t)				//出队
 
 Status LevelOrderTraverse(BiTree T)		//层次遍历二叉树
 {
-	Queue_t Q;			//借助队列实现层次遍历
+	if (!T)
+		return OK;
+						
+	Queue_t Q;			//借助队列实现层次遍历	此时 T 存在
 	InitQueue_t(Q);
-
-	if (T)
-		EnQueue_t(Q, T);
+	
+	EnQueue_t(Q, T);
 
 	BiTreeNode *t;
 	while (!QueueEmpty_t(Q))	//每个结点出队后，将其子树入队
@@ -500,11 +502,13 @@ Status ChangeTopFlag(Stack_t &S)
 
 Status PreOrderTraverse_1(BiTree T)		//前序非递归
 {
-	Stack_t S;
-	InitStack_t(S);
+	if (!T)
+		return OK;
 
-	if (T)
-		Push_t(S, T);
+	Stack_t S;			// T 存在，开始利用栈遍历
+	InitStack_t(S);
+	
+	Push_t(S, T);
 
 	BiTreeNode* t;
 	while (!StackEmpty_t(S))
@@ -526,11 +530,13 @@ Status PreOrderTraverse_1(BiTree T)		//前序非递归
 
 Status InOrderTraverse_1(BiTree T)
 {
+	if (!T)
+		return OK;
+
 	Stack_t S;
 	InitStack_t(S);
-
-	if (T)
-		Push_t(S, T);
+	
+	Push_t(S, T);
 
 	bool flag;
 	BiTreeNode* t;
@@ -560,11 +566,13 @@ Status InOrderTraverse_1(BiTree T)
 
 Status PostOrderTraverse_1(BiTree T)
 {
+	if (!T)
+		return OK;
+
 	Stack_t S;
 	InitStack_t(S);
-
-	if (T)
-		Push_t(S, T);
+	
+	Push_t(S, T);
 
 	bool flag;
 	BiTreeNode* t;
@@ -600,19 +608,17 @@ Status PostOrderTraverse_1(BiTree T)
 }
 
 
-//---------判断是否为完全二叉树---------
+//----------------------------其它函数-----------------------------
+
 bool IsComoleteBiTree(BiTree T)		//若是完全二叉树：层序遍历结点过程中，有右孩子必有左孩子；若只有左孩子，则其后的结点没有孩子；
 {
+	if (!T)					//❗在 T 存在时才向下执行，简化判断过程及函数调用❗
+		return true;
+
 	Queue_t Q;
 	InitQueue_t(Q);
 
-	if (T)
-		EnQueue_t(Q, T);
-	else
-	{
-		DestroyQueue_t(Q);
-		return true;
-	}
+	EnQueue_t(Q, T);
 
 	bool flag = true;					//flag为标志，为false时，结点存在孩子则不是完全二叉树
 	BiTreeNode* t;
@@ -651,4 +657,92 @@ bool IsComoleteBiTree(BiTree T)		//若是完全二叉树：层序遍历结点过
 
 	DestroyQueue_t(Q);
 	return true;
+}
+
+Status FindAndDelete(BiTree &T, ElemType x)		//递归实现,在树 T 中删除每个以值 x 为根的子树
+{
+	if (!T)
+		return OK;
+
+	if (T->data == x)				//根结点是，则直接删除，结束函数；在递归调用中，传入的参数不会满足该条件
+	{
+		DestroyBiTree(T);
+		return OK;
+	}
+
+	if (T->left)					//左子树存在，值符合则删除，❗并将相应指针指向空❗；否则继续查找
+	{
+		if (T->left->data == x)
+		{
+			DestroyBiTree(T->left);
+			T->left = NULL;
+		}
+		else
+		{
+			FindAndDelete(T->left, x);
+		}	
+	}
+	if (T->right)					//对右子树同上处理
+	{
+		if (T->right->data == x)
+		{
+			DestroyBiTree(T->right);
+			T->right = NULL;
+		}
+		else
+		{
+			FindAndDelete(T->right, x);
+		}
+	}
+	return OK;
+}
+
+Status FindAndDelete_1(BiTree & T, ElemType x)	//非递归实现
+{
+	if (!T)						//两个提前结束的条件
+		return OK;
+	if (T->data == x)
+	{
+		DestroyBiTree(T);
+		return OK;
+	}
+
+	Stack_t S;
+	InitStack_t(S);
+
+	Push_t(S, T);
+	BiTreeNode* t;
+	while (!StackEmpty_t(S))	//前序遍历查找
+	{
+		Pop_t(S, t);
+		
+		if (t->right)			//值不是 x 入栈，是 x 直接销毁
+		{
+			if (t->right->data == x)
+			{
+				DestroyBiTree(t->right);
+				t->right = NULL;
+			}
+			else
+			{
+				Push_t(S, t->right);
+			}
+		}
+		if (t->left)
+		{
+			if (t->left->data == x)
+			{
+				DestroyBiTree(t->left);
+				t->left = NULL;
+			}
+			else
+			{
+				Push_t(S, t->left);
+			}
+		}
+	}							//遍历完成
+
+	DestroyStack_t(S);
+
+	return OK;
 }
