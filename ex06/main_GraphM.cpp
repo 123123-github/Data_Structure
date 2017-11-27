@@ -11,16 +11,21 @@ int main()
 
 	CreatGraphM(G);
 
-	//输出邻接矩阵
-	for (int i = 1; i <= G.vexnum; i++)
-	{
-		for (int j = 1; j <= G.vexnum; j++)
-		{
-			cout << G.mat.elem[i][j].adj << '\t';
-		}
-		cout << '\n';
-	}
-	cout << endl;
+	PrintVexSet(G);
+	PrintAdjMat(G);
+
+	VexElemType v,w,adjvex;
+	cout << "请输入一个顶点 v \n";
+	cin >> v;
+	FirstAdjVex(G, v, adjvex);
+	cout << "第一个邻接顶点为：\n";
+	cout << adjvex << endl;
+
+	cout << "请输入顶点 w \n";
+	cin >> w;
+	NextAdjVex(G, v, w, adjvex);
+	cout << " v 相对于 w 之后的第一个邻接结点是：\n";
+	cout << adjvex;
 
 	DestroyGraphM(G);
 
