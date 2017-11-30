@@ -112,6 +112,10 @@ Status NextAdjVex(GraphM G, VexElemType v, VexElemType w, VexElemType &adjvex);	
 
 int NextAdjVex(GraphM G, int v, int w);		//输入返回均为顶点集位序的重载函数
 
+int LastAdjVex(GraphM G, int v);
+
+int PriorAdjVex(GraphM G, int v, int w);
+
 Status InsertVex(GraphM &G, VexElemType v);		//在图中插入顶点 v 
 
 Status DeleteVex(GraphM &G, VexElemType v);		//删除图中的顶点 v 
@@ -149,14 +153,40 @@ Status DeQueue_t(Queue_t &Q, int &t);			//出队
 
 //-----------遍历用队列定义结束-----------
 
-void DFS(GraphM G, int p);			//从顶点集中的第 p 个顶点开始深度优先搜索
+//--------------遍历用栈定义--------------
+#define STACK_INIT_SIZE 100 //栈存储空间 初始分配量
+#define STACKINCREMENT 10   //栈存储空间 分配增量
 
-void BFS(GraphM G, int p);			//广度优先搜索
+typedef int stackelem;
 
-void DFSTraverse(GraphM G);			//深度优先遍历
+struct Stack_t
+{
+	stackelem* base;
+	stackelem* top;
+	int stacksize;
+};
 
-void BFSTraverse(GraphM G);			//广度优先遍历
+Status InitStack_t(Stack_t &S);
 
+Status DestroyStack_t(Stack_t &S);
+
+bool StackEmpty_t(Stack_t S);
+
+Status GetTop(Stack_t S, stackelem &t);
+
+Status Pop_t(Stack_t &S, stackelem &t);
+
+Status Push_t(Stack_t &S, stackelem t);
+
+//------------遍历用栈定义结束------------
+
+Status DFS(GraphM G, int p);			//从顶点集中的第 p 个顶点开始深度优先搜索
+
+Status BFS(GraphM G, int p);			//广度优先搜索
+
+Status DFSTraverse(GraphM G);			//深度优先遍历
+
+Status BFSTraverse(GraphM G);			//广度优先遍历
 
 
 //------------辅助检测函数--------------

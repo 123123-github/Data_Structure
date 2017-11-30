@@ -13,12 +13,8 @@ int main()
 
 	PrintGraphMat(G);
 
-	VexElemType v;
-	cout << "请输入要添加的顶点:\n";
-	cin >> v;
-	InsertVex(G, v);
-
-	PrintGraphMat(G);
+	BFSTraverse(G);
+	
 
 	DestroyGraphM(G);
 

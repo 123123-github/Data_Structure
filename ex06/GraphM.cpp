@@ -471,9 +471,10 @@ Status FirstAdjVex(GraphM G, VexElemType v, VexElemType &adjvex)
 
 int FirstAdjVex(GraphM G, int v)
 {
-	AdjMatElem **elem;
-	elem = G.mat.elem;
-	for (int j = 1; j <= G.vexnum; j++)
+	AdjMatElem **elem = G.mat.elem;
+	int n = G.vexnum;
+
+	for (int j = 1; j <= n; j++)
 		if (elem[v][j].adj > 0)			//表示邻接，不是 0 或 INFINITY_MY
 			return j;
 
@@ -508,10 +509,34 @@ Status NextAdjVex(GraphM G, VexElemType v, VexElemType w, VexElemType &adjvex)
 
 int NextAdjVex(GraphM G, int v, int w)
 {
-	AdjMatElem **elem;
-	elem = G.mat.elem;
-	for (int j = w + 1; j <= G.vexnum; j++)
+	AdjMatElem **elem = G.mat.elem;
+	int n = G.vexnum;
+
+	for (int j = w + 1; j <= n; j++)
 		if (elem[v][j].adj > 0)
+			return j;
+
+	return 0;
+}
+
+int LastAdjVex(GraphM G, int v)
+{
+	AdjMatElem **elem = G.mat.elem;
+	int n = G.vexnum;
+
+	for (int j = n; j >= 1; j--)
+		if (elem[v][j].adj > 0)			//表示邻接，不是 0 或 INFINITY_MY
+			return j;
+	return 0;
+}
+
+int PriorAdjVex(GraphM G, int v, int w)
+{
+	AdjMatElem **elem = G.mat.elem;
+	int n = G.vexnum;
+
+	for (int j = w-1; j >= 1; j--)
+		if (elem[v][j].adj > 0)			//表示邻接，不是 0 或 INFINITY_MY
 			return j;
 
 	return 0;
@@ -726,41 +751,257 @@ Status DeQueue_t(Queue_t &Q, int &t)				//出队
 	return OK;
 }
 
-//----------遍历树用队列定义结束----------
+//----------遍历用队列定义结束----------
 
-void DFS(GraphM G, int p)		//非递归栈实现
+//-------------遍历用栈定义-------------
+
+Status InitStack_t(Stack_t &S)
 {
-	/* ??? 递归如何设置标志数组 ???*/
+	S.base = new stackelem[STACK_INIT_SIZE];
+	if (!S.base)
+		return ERROR;
+
+	S.top = S.base;
+	S.stacksize = STACK_INIT_SIZE;
+
+	return OK;
 }
 
-void BFS(GraphM G, int p)		//队列实现
+Status DestroyStack_t(Stack_t &S)
 {
+	delete[] S.base;
+	S.top = S.base = NULL;
+	S.stacksize = -1;
 
+	return OK;
 }
 
-void DFSTraverse(GraphM G)
+bool StackEmpty_t(Stack_t S)
 {
-
+	if (S.top == S.base)
+		return true;
+	else
+		return false;
 }
 
-void BFSTraverse(GraphM G)
+Status GetTop(Stack_t S, stackelem &t)
 {
+	if (S.top == S.base)
+		return FALSE;
 
+	stackelem s;
+	s = *(S.top - 1);
+	t = s;
+
+	return OK;
 }
 
+Status Pop_t(Stack_t &S, stackelem &t)
+{
+	if (S.base == S.top)
+		return ERROR;
 
+	stackelem s;
+	s = *(S.top - 1);
+	t = s;
 
+	S.top--;
 
+	return OK;
+}
 
+Status Push_t(Stack_t &S, stackelem t)
+{
+	if (S.top - S.base >= S.stacksize)
+	{
+		stackelem *newbase;
+		newbase = new stackelem[S.stacksize + STACKINCREMENT];
+		if (!newbase)
+			exit(OVERFLOW);
 
+		for (int i = 0;i < S.stacksize;i++)
+			newbase[i] = S.base[i];
 
+		S.base = newbase;
+		S.top = S.base + S.stacksize;
+		S.stacksize += STACKINCREMENT;
+	}
 
+	stackelem s;
+	s = t;
+	*S.top = s;
+	S.top++;
 
+	return OK;
+}
 
+//----------遍历用栈定义结束-----------
 
+Status DFS(GraphM G, int p)		//非递归栈实现			/* ??? 递归如何设置标志数组 ???*/
+{
+	int n = G.vexnum;
+	VexElemType *vexset = G.vexset.elem;
 
+	if (p<1 || p>n)
+		return ERROR;
 
+	bool *visited;				//初始化标志
+	visited = new bool[n + 1];
+	for (int i = 1;i <= n;i++)
+		visited[i] = false;
 
+	Stack_t S;
+	InitStack_t(S);
+
+	visited[p] = true;
+	Push_t(S, p);
+	while (!StackEmpty_t(S))
+	{
+		Pop_t(S, p);
+		cout << vexset[p] << '\t';
+
+		for (int q = LastAdjVex(G, p); q > 0; q = PriorAdjVex(G, p, q))
+		{
+			if (!visited[q])
+			{
+				visited[q] = true;
+				Push_t(S, q);
+			}
+		}
+	}
+	cout << endl;
+
+	DestroyStack_t(S);
+	delete[] visited;
+
+	return OK;
+}
+
+Status BFS(GraphM G, int p)		//队列实现
+{
+	int n = G.vexnum;
+	VexElemType *vexset = G.vexset.elem;
+
+	if (p<1 || p>n)
+		return ERROR;
+
+	bool *visited;				//初始化标志
+	visited = new bool[n + 1];
+	for (int i = 1;i <= n;i++)
+		visited[i] = false;
+
+	Queue_t Q;
+	InitQueue_t(Q);
+
+	visited[p] = true;
+	EnQueue_t(Q, p);
+	while (!QueueEmpty_t(Q))
+	{
+		DeQueue_t(Q, p);
+		cout << vexset[p] << '\t';
+
+		for (int q = FirstAdjVex(G, p); q > 0; q = NextAdjVex(G, p, q))
+		{
+			if (!visited[q])
+			{
+				visited[q] = true;
+				EnQueue_t(Q, q);
+			}
+		}
+	}
+	cout << endl;
+
+	DestroyQueue_t(Q);
+	delete[] visited;
+
+	return OK;
+}
+
+Status DFSTraverse(GraphM G)		//在 DFS 的基础上做修改
+{
+	int n = G.vexnum;
+	VexElemType *vexset = G.vexset.elem;
+
+	bool *visited;				//初始化标志
+	visited = new bool[n + 1];
+	for (int i = 1;i <= n;i++)
+		visited[i] = false;
+
+	Stack_t S;					//初始化栈
+	InitStack_t(S);
+
+	for (int p = 1; p <= n; p++)		//对每一个顶点进行 DFS 
+	{
+		if (visited[p])
+			continue;
+		
+		visited[p] = true;
+		Push_t(S, p);
+		while (!StackEmpty_t(S))
+		{
+			Pop_t(S, p);
+			cout << vexset[p] << '\t';
+
+			for (int q = LastAdjVex(G, p); q > 0; q = PriorAdjVex(G, p, q))
+			{
+				if (!visited[q])
+				{
+					visited[q] = true;
+					Push_t(S, q);
+				}
+			}
+		}
+	}
+	cout << endl;
+
+	DestroyStack_t(S);
+	delete[] visited;
+
+	return OK;
+}
+
+Status BFSTraverse(GraphM G)
+{
+	int n = G.vexnum;
+	VexElemType *vexset = G.vexset.elem;
+
+	bool *visited;				//初始化标志
+	visited = new bool[n + 1];
+	for (int i = 1;i <= n;i++)
+		visited[i] = false;
+
+	Queue_t Q;					//初始化队列
+	InitQueue_t(Q);
+
+	for (int p = 1; p <= n; p++)		//对每一个顶点进行 BFS 
+	{
+		if (visited[p])
+			continue;
+
+		visited[p] = true;
+		EnQueue_t(Q, p);
+		while (!QueueEmpty_t(Q))
+		{
+			DeQueue_t(Q, p);
+			cout << vexset[p] << '\t';
+
+			for (int q = FirstAdjVex(G, p); q > 0; q = NextAdjVex(G, p, q))
+			{
+				if (!visited[q])
+				{
+					visited[q] = true;
+					EnQueue_t(Q, q);
+				}
+			}
+		}
+	}
+	cout << endl;
+
+	DestroyQueue_t(Q);
+	delete[] visited;
+
+	return OK;
+}
 
 
 
