@@ -155,7 +155,7 @@ Status PostOrderTraverse_1(BiTree T);	//后序非递归
 
 //----------------------------其它函数-----------------------------
 
-bool IsComoleteBiTree(BiTree T);		//判断是否是完全二叉树
+bool IsCompleteBiTree(BiTree T);		//判断是否是完全二叉树
 
 Status FindAndDelete(BiTree &T,ElemType x);		//递归	在树 T 中删除每个以值 x 为根的子树
 

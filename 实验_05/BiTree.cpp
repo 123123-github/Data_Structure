@@ -102,7 +102,11 @@ Status BiTreeDepth(BiTree &T)
 {
 	if (!T)
 		return 0;
-	else if ((T->left) && (T->right))
+	/*此处判断有误，应取反
+		else if ((T->left) && (T->right))
+		return 1;
+	*/
+	else if ((!T->left) && (!T->right))
 		return 1;
 	else
 	{
@@ -136,7 +140,7 @@ BiTreeNode* Parent(BiTree &T, BiTreeNode *e)			//返回 e 所指向结点的双�
 	if (T->left == e || T->right == e)
 		return T;			// 此时 T 为 e 的双亲
 
-							//------以上情况都不成立时，在 T 的子树中寻找 e 的双亲-------
+	//------以上情况都不成立时，在 T 的子树中寻找 e 的双亲-------
 	BiTreeNode *p;
 
 	if (T->left)		//左孩子存在时，在左子树中寻找,未能找到时返回值为 NULL 则不输出
@@ -610,7 +614,7 @@ Status PostOrderTraverse_1(BiTree T)
 
 //----------------------------其它函数-----------------------------
 
-bool IsComoleteBiTree(BiTree T)		//若是完全二叉树：层序遍历结点过程中，有右孩子必有左孩子；若只有左孩子，则其后的结点没有孩子；
+bool IsCompleteBiTree(BiTree T)		//若是完全二叉树：层序遍历结点过程中，有右孩子必有左孩子；若只有左孩子，则其后的结点没有孩子；
 {
 	if (!T)					//❗在 T 存在时才向下执行，简化判断过程及函数调用❗
 		return true;
