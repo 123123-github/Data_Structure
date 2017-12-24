@@ -482,6 +482,8 @@ Status Push_t(Stack_t &S, BiTreeNode* t)
 		for (int i = 0;i < S.stacksize;i++)
 			newbase[i] = S.base[i];
 
+		delete S.base;
+
 		S.base = newbase;
 		S.top = S.base + S.stacksize;
 		S.stacksize += STACKINCREMENT;
