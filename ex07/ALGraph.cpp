@@ -341,5 +341,5 @@ Status CriticalPath(ALGraph G)
 	delete[] ve;
 	delete[] vl;
 
-	return Status();
+	return OK;
 }
