@@ -1,8 +1,8 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include "HashTable.h"
 using namespace std;
 
-//-------------------- ¹şÏ£±íÀàº¯ÊıÊµÏÖ -----------------------
+//-------------------- å“ˆå¸Œè¡¨ç±»å‡½æ•°å®ç° -----------------------
 
 HashTable::HashTable(int size)
 {
@@ -37,7 +37,7 @@ HashTable::~HashTable()
 }
 
 
-//------------ »ù±¾²Ù×÷ -----------
+//------------ åŸºæœ¬æ“ä½œ -----------
 
 Status HashTable::Search(int key, int & p, int & c)
 {
@@ -47,23 +47,23 @@ Status HashTable::Search(int key, int & p, int & c)
 	start = p;
 	c = 0;
 
-	while (elem[p] != NULLKEY && elem[p] != key)				//1. ´æÔÚ ÇÒ ²»ÏàµÈ -> ´¦Àí³åÍ»
+	while (elem[p] != NULLKEY && elem[p] != key)				//1. å­˜åœ¨ ä¸” ä¸ç›¸ç­‰ -> å¤„ç†å†²çª
 		collision(start, p, ++c);
 
-	if (elem[p] == NULLKEY)										//2. ²»´æÔÚ -> ±íÖĞÃ»ÓĞÕâ¸öÊı¾İ
+	if (elem[p] == NULLKEY)										//2. ä¸å­˜åœ¨ -> è¡¨ä¸­æ²¡æœ‰è¿™ä¸ªæ•°æ®
 		return UNSUCCESS;
-	else														//3. ´æÔÚ ÇÒ ÏàµÈ -> ÕÒµ½
+	else														//3. å­˜åœ¨ ä¸” ç›¸ç­‰ -> æ‰¾åˆ°
 		return SUCCESS;
 }
 
 Status HashTable::Insert(int e)
 {
-	int p;										// ²åÈëÎ»ÖÃ 
-	int c = 0;									//³åÍ»´ÎÊı
+	int p;										// æ’å…¥ä½ç½® 
+	int c = 0;									//å†²çªæ¬¡æ•°
 
-	if (Search(e, p, c))						// ÕÒµ½ËµÃ÷ÔªËØÖØ¸´
+	if (Search(e, p, c))						// æ‰¾åˆ°è¯´æ˜å…ƒç´ é‡å¤
 		return DUPLICATE;
-	else										// Ã»ÓĞÖØ¸´ ÕÒµ½²åÈëÎ»ÖÃ
+	else										// æ²¡æœ‰é‡å¤ æ‰¾åˆ°æ’å…¥ä½ç½®
 	{
 		elem[p] = e;
 		count++;
@@ -81,12 +81,12 @@ void HashTable::collision(int start, int & p, int c)
 {
 	int d;
 
-	if (c % 2 == 0)									// Å¼Êı´Î³åÍ»
+	if (c % 2 == 0)									// å¶æ•°æ¬¡å†²çª
 		d = -c * c / 4;
-	else											// ÆæÊı´Î³åÍ»
+	else											// å¥‡æ•°æ¬¡å†²çª
 		d = (c + 1)*(c + 1) / 4;
 
-	p = (start + d + tablesize) % tablesize;					// È·¶¨±íÖĞÎ»ÖÃ
+	p = (start + d + tablesize) % tablesize;					// ç¡®å®šè¡¨ä¸­ä½ç½®
 }
 
 void HashTable::PrintHashTable()
