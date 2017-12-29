@@ -225,6 +225,7 @@ void List::InsertSort()
 	order = true;
 }
 
+
 void List::ShellInsert(int d)
 {
 	for (int i = 1 + d; i <= length;++i)
@@ -246,6 +247,7 @@ void List::ShellSort()
 
 	order = true;
 }
+
 
 int List::Partition(int low, int high)
 {
@@ -286,6 +288,7 @@ void List::QuickSort()
 	QSort(1, length);
 }
 
+
 void List::HeapAdjust(int s, int m)
 {
 	int r;
@@ -321,4 +324,195 @@ void List::HeapSort()
 
 		HeapAdjust(1, i - 1);
 	}
+}
+
+
+void List::Merge(int s, int m, int n, int * &result)
+{
+	int i = s;
+	int j = m + 1;
+	int k = i;						/* !!!  此处 k 初值应为 i  !!! */
+
+	while (i <= m && j <= n)
+	{
+		if (elem[i] <= elem[j])
+			result[k++] = elem[i++];
+		else
+			result[k++] = elem[j++];		/* 错写为 = result[j++] */
+	}
+
+	while (i <= m)
+		result[k++] = elem[i++];
+	while (j <= n)
+		result[k++] = elem[j++];
+}
+
+void List::MergeSort()
+{
+	int *result;
+	result = new int[length + 1];				// 为归并排序开辟一个与自身同样大的空间
+
+	int d;
+	int s, m, n;
+
+	for (d = 2;d <= length;d *= 2)											// d 个元素一组归并
+	{
+
+		for (n = d;n <= length;n += d)			// n 为归并的末尾元素
+		{
+			s = n - d + 1;
+			m = n - d / 2;
+			Merge(s, m, n, result);
+		}
+		if (n - d < length)													// 不足 d 个的也要合并
+		{
+			s = n - d + 1;			/* 跳出 for 循环后 n 一定大于等于 length , 需要先 - d 再判断 */
+			n = length;
+			m = s + d / 2 - 1;
+			m = m > length ? length : m;
+			Merge(s, m, n, result);
+		}
+
+		for (int i = 1; i <= length; i++)		// 转存至原空间
+			elem[i] = result[i];
+	}
+	if (d / 2 < length)														// 合并剩余的不完整部分
+	{
+		s = 1;
+		m = d / 2;
+		n = length;
+		Merge(s, m, n, result);
+
+		for (int i = 1; i <= length; i++)		// 转存至原空间
+			elem[i] = result[i];
+	}
+
+	delete[] result;
+}
+
+
+void List::RadixSort()
+{
+	int	 keynum = GetKeynum();			// 1.获得循环次数
+
+	queue Q[10];						// 初始化队列
+	for (int i = 0;i < 10;++i)
+	{
+		Q[i].front = Q[i].tail = new qnode;
+		Q[i].tail->next = NULL;
+	}
+	qnode* Head;						// 2.转换为链表
+	ChangeToLink(Head);
+
+	int i, rixnum;
+	for (i = 1, rixnum = 1;i <= keynum;++i, rixnum *= 10)		// 3.分配 回收
+	{
+		Distribute(Head, Q, rixnum);		// 结点分配到相应的队列，依据 rixnum
+		Collect(Q, Head);					// 结点回收
+	}
+
+	ChangeToList(Head);
+}
+
+int List::GetKeynum()
+{
+	int max = elem[1];						// 获取最大值
+	for (int i = 1;i <= length;++i)
+		if (max < elem[i])
+			max = elem[i];
+
+	int keynum = 1;
+	max /= 10;
+	while (max != 0)						// 由最大值计算最高位数，即分配回收的趟数
+	{
+		++keynum;
+		max /= 10;
+	}
+
+	return keynum;
+}
+
+void List::ChangeToLink(qnode* &Head)
+{
+	qnode *p, *s;
+
+	Head = new qnode;						// 有头结点的链表
+	Head->next = NULL;
+	p = Head;								// p 在此处类似尾指针
+
+	for (int i = 1; i <= length; i++)
+	{
+		makenode(s, elem[i]);
+		p->next = s;
+		p = s;
+	}
+}
+
+void List::Distribute(qnode* Head, queue* Q, int rixnum)		// rixnum 用于取得相应的位数，第 i 趟取第 i 位
+{
+	qnode *p, *q;
+	int radix = 0;				// 表示该入哪个队列
+	int data;
+
+	q = Head;
+	for (p = Head->next;p;p = p->next)
+	{
+		data = p->data;
+		radix = data / rixnum % 10;
+
+		Q[radix].tail->next = p;
+		Q[radix].tail = p;
+
+		q->next = NULL;
+		q = p;
+	}
+	q->next = NULL;
+}
+
+void List::Collect(queue* Q, qnode* Head)
+{
+	qnode *p;
+	qnode *t;						// 作为链表的头尾结点
+	t = Head;
+
+	for (int i = 0;i < 10;++i)
+	{
+		p = Q[i].front->next;
+		
+		if (p)						// 队列不空，则整条接上
+		{
+			t->next = p;
+			t = Q[i].tail;
+		}
+	}
+}
+
+void List::ChangeToList(qnode *& Head)
+{
+	qnode *p, *q;		// p 用于释放结点 q 用于遍历
+	p = Head;
+	q = Head->next;
+
+	for (int i = 1;i <= length;++i)
+	{
+		elem[i] = q->data;
+
+		delete p;		// 顺便释放链表
+		p = q;
+		q = q->next;
+	}
+
+	delete p;
+	p = NULL;
+}
+
+
+//---------- 基数排序用到的辅助结构 ----------
+
+
+void makenode(qnode* &s, int e)
+{
+	s = new qnode;
+	s->data = e;
+	s->next = NULL;
 }

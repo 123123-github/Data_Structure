@@ -5,8 +5,25 @@
 
 //--------- 宏定义 -----------
 
-#define INITSIZE 1000
-#define SIZEINCREMENT 200
+#define INITSIZE 100
+#define SIZEINCREMENT 50
+
+//---------- 基数排序用到的辅助结构 ----------
+
+struct qnode
+{
+	int data;
+	qnode *next;
+};
+
+struct queue
+{
+	qnode* front;
+	qnode* tail;
+};
+
+void makenode(qnode* &s, int e);		// 分配结点
+
 
 //--------------------- 线性表 ---------------------
 
@@ -51,7 +68,13 @@ public:
 	void HeapAdjust(int s, int m);									// 堆排序
 	void HeapSort();
 
-	void Merge(int s, int m, int n, int *a);						// 归并排序
+	void Merge(int s, int m, int n, int * &result);					// 归并排序
 	void MergeSort();
-};
 
+	void RadixSort();												// 基数排序
+	int GetKeynum();
+	void ChangeToLink(qnode* &Head);
+	void Distribute(qnode* Head, queue* Q, int rixnum);
+	void Collect(queue * Q, qnode * Head);
+	void ChangeToList(qnode* &Head);
+};
