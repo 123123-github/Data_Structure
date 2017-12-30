@@ -5,8 +5,9 @@
 
 //--------- 宏定义 -----------
 
-#define INITSIZE 100
-#define SIZEINCREMENT 50
+#define INITSIZE 10000000
+#define SIZEINCREMENT 5000000
+
 
 //---------- 基数排序用到的辅助结构 ----------
 

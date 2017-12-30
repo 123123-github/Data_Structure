@@ -393,25 +393,29 @@ void List::MergeSort()
 
 void List::RadixSort()
 {
-	int	 keynum = GetKeynum();			// 1.获得循环次数
+	int	 keynum;
+	keynum = GetKeynum();											// 1.获得循环次数
 
-	queue Q[10];						// 初始化队列
-	for (int i = 0;i < 10;++i)
+	queue Q[10];
+	for (int i = 0;i < 10;++i)										// 2.初始化队列
 	{
 		Q[i].front = Q[i].tail = new qnode;
 		Q[i].tail->next = NULL;
 	}
-	qnode* Head;						// 2.转换为链表
-	ChangeToLink(Head);
+	
+	qnode* Head;
+	ChangeToLink(Head);												// 3.转换为链表
 
-	int i, rixnum;
-	for (i = 1, rixnum = 1;i <= keynum;++i, rixnum *= 10)		// 3.分配 回收
+	int rixnum = 1;
+	for (int i = 1;i <= keynum;++i)									// 4.分配 回收
 	{
 		Distribute(Head, Q, rixnum);		// 结点分配到相应的队列，依据 rixnum
 		Collect(Q, Head);					// 结点回收
+
+		rixnum *= 10;
 	}
 
-	ChangeToList(Head);
+	ChangeToList(Head);												// 5.转换回顺序表
 }
 
 int List::GetKeynum()
@@ -434,10 +438,10 @@ int List::GetKeynum()
 
 void List::ChangeToLink(qnode* &Head)
 {
-	qnode *p, *s;
-
 	Head = new qnode;						// 有头结点的链表
 	Head->next = NULL;
+	
+	qnode *p, *s;
 	p = Head;								// p 在此处类似尾指针
 
 	for (int i = 1; i <= length; i++)
@@ -450,46 +454,49 @@ void List::ChangeToLink(qnode* &Head)
 
 void List::Distribute(qnode* Head, queue* Q, int rixnum)		// rixnum 用于取得相应的位数，第 i 趟取第 i 位
 {
-	qnode *p, *q;
-	int radix = 0;				// 表示该入哪个队列
 	int data;
+	int radix = 0;							// 表示该入哪个队列
+	qnode *p, *q;							// p 在前 q 在后, q 记录 p 的下一个位置
 
-	q = Head;
-	for (p = Head->next;p;p = p->next)
+	for (p = q = Head->next; p; p = q)
 	{
+		q = p->next;						// p 存在 q 记录它的下一个位置
+
 		data = p->data;
 		radix = data / rixnum % 10;
 
-		Q[radix].tail->next = p;
+		Q[radix].tail->next = p;			// 相当于 push 操作
 		Q[radix].tail = p;
-
-		q->next = NULL;
-		q = p;
+		p->next = NULL;						// 尾结点与后面的链断开
 	}
-	q->next = NULL;
 }
 
 void List::Collect(queue* Q, qnode* Head)
 {
-	qnode *p;
-	qnode *t;						// 作为链表的头尾结点
-	t = Head;
+	qnode *t;
+	t = Head;			// 相当于链表的尾指针
+
+	qnode *p, *q;		// 存储队列的第一个和最后一个结点
 
 	for (int i = 0;i < 10;++i)
 	{
 		p = Q[i].front->next;
-		
-		if (p)						// 队列不空，则整条接上
+		q = Q[i].tail;
+
+		if (p)			//  整条接上 队列清空
 		{
 			t->next = p;
-			t = Q[i].tail;
+			t = q;
+
+			Q[i].front->next = NULL;
+			Q[i].tail = Q[i].front;
 		}
 	}
 }
 
-void List::ChangeToList(qnode *& Head)
+void List::ChangeToList(qnode* &Head)
 {
-	qnode *p, *q;		// p 用于释放结点 q 用于遍历
+	qnode *p, *q;		// p 用于释放结点 q 用于遍历   p 在前 q 在后
 	p = Head;
 	q = Head->next;
 
@@ -498,6 +505,7 @@ void List::ChangeToList(qnode *& Head)
 		elem[i] = q->data;
 
 		delete p;		// 顺便释放链表
+
 		p = q;
 		q = q->next;
 	}
