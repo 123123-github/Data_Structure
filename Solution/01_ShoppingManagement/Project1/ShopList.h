@@ -8,7 +8,7 @@
 struct ShopNode
 {
 	Shop data;
-	Shop* next;
+	ShopNode* next;
 };
 
 
@@ -16,13 +16,23 @@ struct ShopNode
 
 class ShopList
 {
-public:
+private:
 	ShopNode* head;
 	ShopNode* tail;
 
-
 public:
 	ShopList();
+	ShopList(const ShopList& SL);
 	~ShopList();
+
+public:
+	void AppendShop(Shop S);
+	void DeleteShop(int shopnum);
+	Shop* GetShop(int shopnum);				// 找到制定编号的商店
+	void PrintShopList();
+
+
+
+
 };
 

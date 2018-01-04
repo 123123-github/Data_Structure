@@ -115,15 +115,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ProductList.h" />
+    <ClInclude Include="MerchandiseList.h" />
     <ClInclude Include="Shop.h" />
     <ClInclude Include="ShopList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ProductList.cpp" />
+    <ClCompile Include="MerchandiseList.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="ShopList.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Init_ShopList.txt" />
+    <Text Include="Text.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,20 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ProductList.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Shop.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ShopList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MerchandiseList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ProductList.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Shop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -38,5 +35,16 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MerchandiseList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Text.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="Init_ShopList.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>
