@@ -11,6 +11,7 @@ int main()
 
 	PrintGraph(G);
 
+	//------------------- FLOYD ----------------
 	int  **D;
 	D = new int*[G.vexnum];
 	for (int i = 0; i < G.vexnum; i++)
@@ -18,6 +19,11 @@ int main()
 		D[i] = new int[G.vexnum];
 	}
 	ShortestPath_FLOYD(G, D);
+
+	//------------------ DIJKSTRA --------------
+	//int *P;
+	//P = new int[G.vexnum];
+	//ShortestPath_DIJ(G, 0, P, D);
 
 	for (int i = 0; i < G.vexnum; i++)
 	{
