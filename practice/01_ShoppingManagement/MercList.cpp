@@ -4,7 +4,6 @@
 using namespace std;
 
 
-
 MercList::MercList(int maxsize)
 {
 	size = maxsize;

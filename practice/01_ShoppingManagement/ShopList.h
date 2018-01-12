@@ -1,5 +1,4 @@
 // 店铺列表
-
 #pragma once
 #include "Shop.h"
 
@@ -36,10 +35,10 @@ struct DuInfoNode
 class ShopList
 {
 private:
-	SNode* head;
+	SNode* head;									// 商铺链表头结点
 	SNode* tail;
 
-	DuInfoNode* duHead;
+	DuInfoNode* duHead;								// 查询的商品双向链表头结点
 	DuInfoNode* duTail;
 
 public:

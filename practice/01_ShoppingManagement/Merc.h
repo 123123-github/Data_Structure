@@ -1,6 +1,5 @@
 #pragma once
 #include <fstream>
-
 using namespace std;
 
 class Merc								// 单个商品

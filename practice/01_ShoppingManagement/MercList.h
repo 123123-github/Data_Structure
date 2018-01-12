@@ -4,6 +4,8 @@
 #define INITSIZE 20
 #define SIZEINCREMENT 10
 
+//--------------------- 商品信息顺序表定义 -------------------
+
 class MercList			// 顺序表
 {
 private:

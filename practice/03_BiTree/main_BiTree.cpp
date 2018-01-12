@@ -13,7 +13,7 @@ int main()
 	ifstream in;
 
 	InitBiTree(T);
-	char filename[20] = "data2.txt";
+	char filename[20] = "data1.txt";		// 便于测试，设置默认的读取文件名，可更改为输入
 
 	//创建树
 	cout << "创建树\n";
@@ -42,7 +42,17 @@ int main()
 	else
 		cout << "不是二叉排序树\n";
 	
-	cout << "结点数\n" << NodeNum(T);
+	cout << "结点数\n" << NodeNum(T) << '\n';
+	
+	cout << "\n前序遍历\n";
+	PreOrderTraverse(T);
+
+	cout << "\n中序遍历\n";
+	InOrderTraverse(T);
+
+	cout << "\n后序遍历:\n";
+	PostOrder(T);
+
 	//销毁树
 	DestroyBiTree(T);
 	system("pause");

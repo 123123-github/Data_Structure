@@ -243,7 +243,7 @@ void modMercSale(ShopList & sList)
 	char name[20];
 	int newPrice;
 
-	cout << "请输入添加商品的店铺编号\n";
+	cout << "请输入要修改价格的商品所在的店铺编号\n";
 	cin >> shopNum;
 
 	cout << "请输入要修改价格商品的名称及修改后的价格\n";

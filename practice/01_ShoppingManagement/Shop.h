@@ -1,12 +1,8 @@
 //店铺
-
 #pragma once
 #include "MercList.h"
 
-
-
 //-------------------- 店铺结构定义 --------------------
-
 
 class Shop
 {

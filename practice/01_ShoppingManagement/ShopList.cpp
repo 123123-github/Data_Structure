@@ -56,7 +56,7 @@ void ShopList::AppendShop(const char * name, int credit)
 	s->next = NULL;
 
 	int num;
-	num = ++(tail->data.num);
+	num = (tail->data.num) + 1;
 	s->data.SetShop(num, name, credit);
 
 	tail->next = s;

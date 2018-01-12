@@ -4,6 +4,7 @@
 #include "BiTree.h"
 #include <fstream>
 #include <queue>
+#include <stack>
 using namespace std;
 
 //------------------------ BiTree 定义------------------------
@@ -739,3 +740,46 @@ void FileCreat(ifstream &in, BiTree & T, const char* filename = "data.txt")		// 
 	}
 	return;
 }
+
+
+//--------------------------- 不使用标志位的后序遍历 -----------------------------
+
+void PostOrder(BiTree T)
+{
+	stack<BiTreeNode*> S;
+	BiTreeNode *t, *p;
+
+	t = T;
+	while (t)						// 结点存在，则进栈，结点左子树存在，左子树进栈，对进栈的结点做同样的处理，即左子树构成的一整条链进栈
+	{
+		S.push(t);
+		t = t->left;
+	}
+	S.push(NULL);					// 加一个最后的标志位'#',标志结束，用 NULL 来表示这个 '#' 的意思
+
+	while (!S.empty())
+	{
+		t = S.top();
+		S.pop();
+		if (t != NULL)				// 出栈结点访问
+		{
+			cout << t->data << '\t';
+		}
+
+		if (!S.empty())				// 出栈后，栈顶元素判断，（根据 '#' 的产生规则，此时最顶的元素一定不会是 NULL ）
+		{
+			p = S.top();
+			if (p->right && p->right != t)			// 最顶部元素有右结点则右结点进栈（同时这个右结点没有被访问过，即 ！= t （刚刚出栈的元素））
+			{
+				p = p->right;		// 有元素进栈，则同最初的进栈操作；
+				while (p)
+				{
+					S.push(p);
+					p = p->left;
+				}
+				S.push(NULL);
+			}
+		}
+	}
+}
+

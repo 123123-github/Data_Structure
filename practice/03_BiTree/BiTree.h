@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include <fstream>
 using namespace std;
 // ADT BinaryTree 二叉链表结构实现
@@ -29,7 +28,7 @@ struct BiTreeNode			//二叉树结点
 	BiTreeNode *right;
 };
 
-typedef BiTreeNode *BiTree;	//结点指针
+typedef BiTreeNode *BiTree;	//结点指针,表示二叉树
 
 Status MakeBiTNode(BiTreeNode* &T, ElemType e);
 
@@ -153,4 +152,8 @@ int Width(BiTree T);
 int NodeNum(BiTree T);
 
 void FileCreat(ifstream & in, BiTree & T, const char * filename);
+
+//--------------------------- 不使用标志位的后序遍历 -----------------------------
+
+void PostOrder(BiTree T);
 
